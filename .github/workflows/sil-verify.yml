@@ -22,11 +22,16 @@ jobs:
 
       - name: Verify frozen demo hashes
         run: |
-          expected_py=$(grep 'sil_integer_demo_v2.py' VERIFY/FREEZE_SHA256.txt | awk '{print $NF}' | tr -d '\r')
-          expected_html=$(grep 'sil_integer_demo_v_1.html' VERIFY/FREEZE_SHA256.txt | awk '{print $NF}' | tr -d '\r')
+          expected_py=$(awk '/demo\\sil_integer_demo_v2.py/{getline; print; exit}' VERIFY/FREEZE_SHA256.txt | tr -d '\r')
+          expected_html=$(awk '/demo\\sil_integer_demo_v_1.html/{getline; print; exit}' VERIFY/FREEZE_SHA256.txt | tr -d '\r')
 
           actual_py=$(sha256sum demo/sil_integer_demo_v2.py | awk '{print $1}')
           actual_html=$(sha256sum demo/sil_integer_demo_v_1.html | awk '{print $1}')
+
+          echo "Expected Python SHA256: $expected_py"
+          echo "Actual Python SHA256:   $actual_py"
+          echo "Expected HTML SHA256:   $expected_html"
+          echo "Actual HTML SHA256:     $actual_html"
 
           [ "$actual_py" = "$expected_py" ] || (echo "python demo hash mismatch" && exit 1)
           [ "$actual_html" = "$expected_html" ] || (echo "html demo hash mismatch" && exit 1)
