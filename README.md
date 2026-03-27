@@ -2,7 +2,9 @@
 
 ## Structural Integer Line — Order-Free Structural Motion
 
-**Deterministic position resolution where motion emerges from structure**
+### ⭐ The Integer Line Is Not Flat. It Is Structural.
+
+Deterministic position resolution where motion emerges from structure
 
 ![SIL](https://img.shields.io/badge/SIL-Structural%20Integer%20Line-black)
 ![Deterministic](https://img.shields.io/badge/Deterministic-Convergence-green)
@@ -12,9 +14,11 @@
 ![Replay](https://img.shields.io/badge/Replay-Deterministic%20%26%20Verifiable-yellowgreen)
 ![Open-Standard](https://img.shields.io/badge/Reference%20Implementation-Open%20Standard-blue)
 
-**Structure-Based Motion • Open Reference Implementation**
+![SIL Verify](https://github.com/OMPSHUNYAYA/Structural-Integer-Line/actions/workflows/sil-verify.yml/badge.svg)
 
 ---
+
+**Structure-Based Motion • Open Reference Implementation**
 
 **No Time • No Order • No Coordinator**  
 **No Timestamps • No Synchronization Required for Position**
