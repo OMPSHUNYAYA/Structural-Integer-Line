@@ -1,0 +1,44 @@
+name: SIL Verify
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify frozen demo hashes
+        run: |
+          expected_py=$(grep 'sil_integer_demo_v2.py' VERIFY/FREEZE_SHA256.txt | awk '{print $NF}' | tr -d '\r')
+          expected_html=$(grep 'sil_integer_demo_v_1.html' VERIFY/FREEZE_SHA256.txt | awk '{print $NF}' | tr -d '\r')
+
+          actual_py=$(sha256sum demo/sil_integer_demo_v2.py | awk '{print $1}')
+          actual_html=$(sha256sum demo/sil_integer_demo_v_1.html | awk '{print $1}')
+
+          [ "$actual_py" = "$expected_py" ] || (echo "python demo hash mismatch" && exit 1)
+          [ "$actual_html" = "$expected_html" ] || (echo "html demo hash mismatch" && exit 1)
+
+      - name: Run Python reference demo
+        run: python demo/sil_integer_demo_v2.py > sil_output.txt
+
+      - name: Verify Python demo output
+        run: |
+          grep -q 'Same Result Across Nodes : True' sil_output.txt
+          grep -q 'Same Certificate        : True' sil_output.txt
+          grep -q 'STRUCTURAL CONVERGENCE ACHIEVED' sil_output.txt
+          grep -q "Result: {'state': 'RESOLVED', 'position': 3}" sil_output.txt
+          grep -q "Result: {'state': 'ABSTAIN', 'position': None}" sil_output.txt
+          grep -q "Result: {'state': 'INCOMPLETE', 'position': 3}" sil_output.txt
