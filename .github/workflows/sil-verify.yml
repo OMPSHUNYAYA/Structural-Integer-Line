@@ -22,8 +22,15 @@ jobs:
 
       - name: Verify frozen demo hashes
         run: |
-          expected_py=$(awk '/demo\\sil_integer_demo_v2.py/{getline; print; exit}' VERIFY/FREEZE_SHA256.txt | tr -d '\r')
-          expected_html=$(awk '/demo\\sil_integer_demo_v_1.html/{getline; print; exit}' VERIFY/FREEZE_SHA256.txt | tr -d '\r')
+          expected_py=$(awk '
+            /SHA256/ {in_sha=1; next}
+            in_sha && /demo\\sil_integer_demo_v2.py/ {getline; print; exit}
+          ' VERIFY/FREEZE_SHA256.txt | tr -d '\r')
+
+          expected_html=$(awk '
+            /SHA256/ {in_sha=1; next}
+            in_sha && /demo\\sil_integer_demo_v_1.html/ {getline; print; exit}
+          ' VERIFY/FREEZE_SHA256.txt | tr -d '\r')
 
           actual_py=$(sha256sum demo/sil_integer_demo_v2.py | awk '{print $1}')
           actual_html=$(sha256sum demo/sil_integer_demo_v_1.html | awk '{print $1}')
