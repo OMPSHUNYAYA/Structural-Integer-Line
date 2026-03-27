@@ -1,0 +1,46 @@
+SIL — Structural Integer Line
+Demo Freeze Record
+
+Scope: demo folder only
+
+Frozen Files
+------------------------------------------------------------
+- demo\sil_integer_demo_v2.py
+- demo\sil_integer_demo_v_1.html
+
+SHA256
+------------------------------------------------------------
+
+demo\sil_integer_demo_v2.py
+a7d989c0ce34c3098de81fd2d6b9e7f0231b44bbc8a48fad15b1ee671f077777
+
+demo\sil_integer_demo_v_1.html
+947a2c73f4677c4457a03785a114bf502230153029fd8db1c21396dcdc19d42d
+
+
+Freeze Rule
+------------------------------------------------------------
+Only the demo folder is frozen for this release.
+
+The VERIFY folder itself is not part of the frozen scope.
+Documentation and supporting materials may evolve
+without affecting the integrity of the frozen demo.
+
+Any change to the demo files invalidates this freeze
+and requires regeneration of all hashes.
+
+
+Core Structural Law
+------------------------------------------------------------
+same structure -> same result
+position = resolve(structure)
+
+
+System Properties
+------------------------------------------------------------
+Deterministic
+Replay-Verifiable
+Time-Free
+Order-Free
+Synchronization-Free
+Conflict-Safe
