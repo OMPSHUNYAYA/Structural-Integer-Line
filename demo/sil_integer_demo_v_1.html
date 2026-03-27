@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIL — The Integer Line Is Not Flat</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0d1a2d;
+      --card: rgba(255,255,255,0.08);
+      --card-strong: rgba(255,255,255,0.12);
+      --line: rgba(255,255,255,0.14);
+      --text: #eaf2ff;
+      --muted: #afbed6;
+      --accent: #9cc7ff;
+      --accent-2: #ffd58a;
+      --good: #9ff3b0;
+      --warn: #ffd58a;
+      --bad: #ffb3b3;
+      --shadow: 0 18px 40px rgba(0,0,0,0.28);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(156,199,255,0.10), transparent 28%),
+        linear-gradient(180deg, #07111f 0%, #081321 100%);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 16px 20px 32px;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 16px 24px 14px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .kicker {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      font-size: clamp(14px, 1.4vw, 17px);
+      color: var(--muted);
+      max-width: 880px;
+      line-height: 1.45;
+      margin: 0 0 10px;
+    }
+
+    .hook {
+      display: grid;
+      gap: 2px;
+      margin-top: 2px;
+      font-size: clamp(17px, 1.55vw, 24px);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .hook .dim { color: var(--muted); font-weight: 600; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.88fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-sub {
+      margin: 3px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .panel-body {
+      padding: 18px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      color: var(--text);
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.20);
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease, box-shadow 120ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: rgba(255,255,255,0.28); }
+    button:active { transform: translateY(0); }
+
+    button.selected {
+      background: linear-gradient(180deg, rgba(156,199,255,0.28), rgba(156,199,255,0.12));
+      border-color: rgba(156,199,255,0.55);
+      box-shadow: 0 0 0 1px rgba(156,199,255,0.18) inset, 0 10px 24px rgba(156,199,255,0.12);
+      color: white;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: var(--card-strong);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 250px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .mini {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .fragment-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .fragment {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      min-height: 48px;
+    }
+
+    .fragment strong {
+      color: var(--accent-2);
+    }
+
+    .integer-line {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .ticks {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+      align-items: end;
+      position: relative;
+      margin-top: 8px;
+    }
+
+    .tick {
+      text-align: center;
+      position: relative;
+      padding-top: 24px;
+      min-height: 80px;
+    }
+
+    .tick::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 18px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 999px;
+    }
+
+    .num {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .marker {
+      position: absolute;
+      left: 50%;
+      top: -2px;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: var(--accent);
+      border: 2px solid white;
+      box-shadow: 0 8px 18px rgba(156,199,255,0.4);
+      opacity: 0;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .tick.active .marker {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.04);
+    }
+
+    .tick.active .num {
+      color: white;
+      font-weight: 700;
+    }
+
+    .resolver-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .status {
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      min-height: 112px;
+    }
+
+    .status h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .value {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .state-resolved { color: var(--good); }
+    .state-incomplete { color: var(--warn); }
+    .state-abstain { color: var(--bad); }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      word-break: break-word;
+      color: #d7e7ff;
+    }
+
+    .proof-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .proof-item {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .proof-item strong {
+      color: white;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1060px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .wrap {
+        padding: 12px 14px 24px;
+      }
+
+      .hero {
+        padding: 14px 16px 12px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .layout,
+      .resolver-box {
+        grid-template-columns: 1fr;
+      }
+
+      .ticks {
+        grid-template-columns: repeat(9, minmax(24px, 1fr));
+      }
+
+      .controls {
+        gap: 8px;
+      }
+
+      button {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="kicker">SIL • Structural Integer Line</div>
+      <h1>The Integer Line Is Not Flat</h1>
+      <p class="subtitle">
+        A deterministic structural integer demo where truth, motion, and convergence emerge from structure — not time,
+        order, or synchronization.
+      </p>
+      <div class="hook">
+        <div class="dim">The integer line looks uniform.</div>
+        <div>Under structure, it behaves.</div>
+      </div>
+      <div class="pill-row">
+        <div class="pill">Deterministic</div>
+        <div class="pill">Replay-Verifiable</div>
+        <div class="pill">Time-Free</div>
+        <div class="pill">Order-Free</div>
+        <div class="pill">Synchronization-Free</div>
+        <div class="pill">Conflict-Safe</div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">Interactive Structural Demo</h2>
+            <p class="panel-sub">Different fragment orders. Same structure. Same final integer truth.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="controls">
+            <button id="btnNodeA">Show Node A</button>
+            <button id="btnNodeB">Show Node B</button>
+            <button id="btnNodeC">Show Node C</button>
+            <button id="btnResolve">Resolve Structure</button>
+            <button id="btnConflict">Show Conflict</button>
+            <button id="btnIncomplete">Show Incomplete</button>
+            <button id="btnReset">Reset</button>
+          </div>
+
+          <div class="layout">
+            <div class="card">
+              <h3>Visible Fragments</h3>
+              <div class="mini" id="scenarioNote">
+                Three independent nodes can see different orders of the same structural fragments.
+              </div>
+              <div class="fragment-list" id="fragmentList"></div>
+            </div>
+
+            <div class="card">
+              <h3>Integer Line</h3>
+              <div class="mini">The same structure resolves to the same final position even when the fragment order changes.</div>
+              <div class="integer-line">
+                <div class="mono">Base: <span id="baseValue">0</span> &nbsp; | &nbsp; Final position: <span id="finalValue">—</span></div>
+                <div class="ticks" id="ticks"></div>
+              </div>
+              <div class="resolver-box">
+                <div class="status">
+                  <h4>Resolution State</h4>
+                  <div class="value" id="stateValue">UNRESOLVED</div>
+                  <div class="mono" id="stateNote">Apply structural resolution to determine whether truth is RESOLVED, INCOMPLETE, or ABSTAIN.</div>
+                </div>
+                <div class="status">
+                  <h4>Certificate</h4>
+                  <div class="mono" id="certValue">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            Core law: <span class="mono">same structure -&gt; same result</span>.<br>
+            The system does not ask what came first. It asks what structure is complete, consistent, and safe to resolve.
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">What This Proves</h2>
+            <p class="panel-sub">A minimal shock demo for structure-first correctness.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="proof-list">
+            <div class="proof-item">
+              <strong>Convergence without order</strong>
+              <div class="mono">Node A != Node B != Node C (input order)<br>result_A = result_B = result_C</div>
+            </div>
+            <div class="proof-item">
+              <strong>Deterministic identity</strong>
+              <div class="mono">The same resolved structure produces the same replay certificate.</div>
+            </div>
+            <div class="proof-item">
+              <strong>Conflict-safe</strong>
+              <div class="mono">If multiple active moves survive, the system returns ABSTAIN instead of a false answer.</div>
+            </div>
+            <div class="proof-item">
+              <strong>Honest incompleteness</strong>
+              <div class="mono">If confirmation is missing, the system returns INCOMPLETE instead of forcing certainty.</div>
+            </div>
+            <div class="proof-item">
+              <strong>Primitive-level proof</strong>
+              <div class="mono">Even on a bare integer line, truth does not require time, order, or synchronization.</div>
+            </div>
+          </div>
+          <div class="footer-note" style="margin-top:18px;">
+            Powered by structural principles from the Shunyaya framework.<br>
+            Deterministic • Replay-Verifiable • Conservative by design
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const nodeA = [
+      { type: "OPEN", value: 0 },
+      { type: "MOVE", id: 1, value: 2 },
+      { type: "RETRACT", target: 1 },
+      { type: "MOVE", id: 2, value: 3 },
+      { type: "CONFIRM" }
+    ];
+
+    const nodeB = [
+      { type: "CONFIRM" },
+      { type: "MOVE", id: 2, value: 3 },
+      { type: "RETRACT", target: 1 },
+      { type: "MOVE", id: 1, value: 2 },
+      { type: "OPEN", value: 0 }
+    ];
+
+    const nodeC = [
+      { type: "MOVE", id: 1, value: 2 },
+      { type: "OPEN", value: 0 },
+      { type: "MOVE", id: 2, value: 3 },
+      { type: "RETRACT", target: 1 },
+      { type: "CONFIRM" }
+    ];
+
+    const conflictFragments = [
+      { type: "OPEN", value: 0 },
+      { type: "MOVE", id: 1, value: 2 },
+      { type: "MOVE", id: 2, value: 3 },
+      { type: "CONFIRM" }
+    ];
+
+    const incompleteFragments = [
+      { type: "OPEN", value: 0 },
+      { type: "MOVE", id: 2, value: 3 }
+    ];
+
+    const scenarioMap = {
+      nodeA,
+      nodeB,
+      nodeC,
+      conflict: conflictFragments,
+      incomplete: incompleteFragments
+    };
+
+    const scenarioDescriptions = {
+      nodeA: "Node A sees one valid ordering of the same structural fragments.",
+      nodeB: "Node B sees the same structure in a different order — yet the final truth remains the same.",
+      nodeC: "Node C also sees a different order. Structure, not sequence, determines the result.",
+      conflict: "Conflict scenario: two active moves survive, so the system returns ABSTAIN.",
+      incomplete: "Incomplete scenario: confirmation is missing, so the system remains INCOMPLETE."
+    };
+
+    let currentFragments = nodeA;
+    let currentMode = "nodeA";
+
+    const fragmentList = document.getElementById("fragmentList");
+    const baseValue = document.getElementById("baseValue");
+    const finalValue = document.getElementById("finalValue");
+    const stateValue = document.getElementById("stateValue");
+    const stateNote = document.getElementById("stateNote");
+    const certValue = document.getElementById("certValue");
+    const scenarioNote = document.getElementById("scenarioNote");
+    const ticks = document.getElementById("ticks");
+
+    const btnNodeA = document.getElementById("btnNodeA");
+    const btnNodeB = document.getElementById("btnNodeB");
+    const btnNodeC = document.getElementById("btnNodeC");
+    const btnResolve = document.getElementById("btnResolve");
+    const btnConflict = document.getElementById("btnConflict");
+    const btnIncomplete = document.getElementById("btnIncomplete");
+    const btnReset = document.getElementById("btnReset");
+
+    const scenarioButtons = {
+      nodeA: btnNodeA,
+      nodeB: btnNodeB,
+      nodeC: btnNodeC,
+      conflict: btnConflict,
+      incomplete: btnIncomplete
+    };
+
+    const labels = [-4,-3,-2,-1,0,1,2,3,4];
+
+    function buildTicks() {
+      ticks.innerHTML = "";
+      labels.forEach((n) => {
+        const el = document.createElement("div");
+        el.className = "tick";
+        el.dataset.value = String(n);
+        el.innerHTML = `<div class="marker"></div><div class="num">${n}</div>`;
+        ticks.appendChild(el);
+      });
+    }
+
+    function setMarker(position) {
+      document.querySelectorAll(".tick").forEach((el) => el.classList.remove("active"));
+      if (typeof position !== "number") return;
+      const match = document.querySelector(`.tick[data-value="${position}"]`);
+      if (match) match.classList.add("active");
+    }
+
+    function formatFragment(f) {
+      if (f.type === "OPEN") return `<strong>OPEN</strong> &nbsp; base = ${f.value}`;
+      if (f.type === "MOVE") return `<strong>MOVE</strong> &nbsp; id=${f.id}, value=+${f.value}`;
+      if (f.type === "RETRACT") return `<strong>RETRACT</strong> &nbsp; target=${f.target}`;
+      if (f.type === "CONFIRM") return `<strong>CONFIRM</strong> &nbsp; finalize active structure`;
+      return `<strong>${f.type}</strong>`;
+    }
+
+    function renderFragments(fragments) {
+      fragmentList.innerHTML = "";
+      fragments.forEach((f) => {
+        const item = document.createElement("div");
+        item.className = "fragment";
+        item.innerHTML = formatFragment(f);
+        fragmentList.appendChild(item);
+      });
+    }
+
+    function canonicalString(obj) {
+      return JSON.stringify(obj);
+    }
+
+    async function sha256Hex(text) {
+      const data = new TextEncoder().encode(text);
+      const hash = await crypto.subtle.digest("SHA-256", data);
+      return [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function resolveStructure(fragments) {
+      let base = null;
+      const moves = {};
+      const retracted = new Set();
+      let confirmed = false;
+
+      for (const f of fragments) {
+        const t = f.type;
+
+        if (t === "OPEN") {
+          if (!("value" in f)) return { state: "ABSTAIN", position: null };
+          base = f.value;
+        } else if (t === "MOVE") {
+          if (!("id" in f) || !("value" in f)) return { state: "ABSTAIN", position: null };
+          moves[f.id] = f.value;
+        } else if (t === "RETRACT") {
+          if (!("target" in f)) return { state: "ABSTAIN", position: null };
+          retracted.add(f.target);
+        } else if (t === "CONFIRM") {
+          confirmed = true;
+        } else {
+          return { state: "ABSTAIN", position: null };
+        }
+      }
+
+      if (base === null) return { state: "INCOMPLETE", position: null };
+
+      const validMoves = [];
+      for (const [mid, val] of Object.entries(moves)) {
+        if (!retracted.has(Number(mid)) && !retracted.has(mid)) {
+          validMoves.push(val);
+        }
+      }
+
+      if (validMoves.length === 0) return { state: "INCOMPLETE", position: null };
+      if (validMoves.length > 1) return { state: "ABSTAIN", position: null };
+
+      const finalPosition = base + validMoves[0];
+      if (!confirmed) return { state: "INCOMPLETE", position: finalPosition };
+
+      return { state: "RESOLVED", position: finalPosition };
+    }
+
+    async function showResolution() {
+      const result = resolveStructure(currentFragments);
+      const cert = await sha256Hex(canonicalString(result));
+
+      finalValue.textContent = result.position === null ? "—" : result.position;
+      certValue.textContent = cert;
+      stateValue.textContent = result.state;
+      stateValue.className = "value";
+
+      if (result.state === "RESOLVED") {
+        stateValue.classList.add("state-resolved");
+        stateNote.textContent = "The active structural move is complete, consistent, and confirmed.";
+      } else if (result.state === "INCOMPLETE") {
+        stateValue.classList.add("state-incomplete");
+        stateNote.textContent = "The visible structure is not yet sufficient for full resolution.";
+      } else {
+        stateValue.classList.add("state-abstain");
+        stateNote.textContent = "The visible structure is conflicting or unsafe. The system refuses a false answer.";
+      }
+
+      const open = currentFragments.find(f => f.type === "OPEN");
+      baseValue.textContent = open ? open.value : "—";
+      setMarker(typeof result.position === "number" ? result.position : null);
+      updateSelectedButtons(currentMode, true);
+    }
+
+    function resetView() {
+      finalValue.textContent = "—";
+      stateValue.textContent = "UNRESOLVED";
+      stateValue.className = "value";
+      stateNote.textContent = "Apply structural resolution to determine whether truth is RESOLVED, INCOMPLETE, or ABSTAIN.";
+      certValue.textContent = "—";
+      const open = currentFragments.find(f => f.type === "OPEN");
+      baseValue.textContent = open ? open.value : "—";
+      setMarker(null);
+      updateSelectedButtons(currentMode, false);
+    }
+
+    function updateSelectedButtons(mode, resolved) {
+      Object.values(scenarioButtons).forEach((btn) => btn.classList.remove("selected"));
+      btnResolve.classList.remove("selected");
+      btnReset.classList.remove("selected");
+
+      if (scenarioButtons[mode]) {
+        scenarioButtons[mode].classList.add("selected");
+      }
+
+      if (resolved) {
+        btnResolve.classList.add("selected");
+      }
+    }
+
+    function setScenario(mode) {
+      currentMode = mode;
+      currentFragments = scenarioMap[mode];
+      scenarioNote.textContent = scenarioDescriptions[mode];
+      renderFragments(currentFragments);
+      resetView();
+    }
+
+    btnNodeA.addEventListener("click", () => setScenario("nodeA"));
+    btnNodeB.addEventListener("click", () => setScenario("nodeB"));
+    btnNodeC.addEventListener("click", () => setScenario("nodeC"));
+    btnConflict.addEventListener("click", () => setScenario("conflict"));
+    btnIncomplete.addEventListener("click", () => setScenario("incomplete"));
+    btnResolve.addEventListener("click", showResolution);
+    btnReset.addEventListener("click", () => {
+      currentMode = "nodeA";
+      currentFragments = scenarioMap.nodeA;
+      scenarioNote.textContent = scenarioDescriptions.nodeA;
+      renderFragments(currentFragments);
+      resetView();
+      btnReset.classList.add("selected");
+    });
+
+    buildTicks();
+    setScenario("nodeA");
+  </script>
+</body>
+</html>
