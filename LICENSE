@@ -1,0 +1,219 @@
+Open Standard License — SIL Reference Implementation
+
+SIL — Structural Integer Line (Order-Free Structural Motion)
+Shunyaya Structural Motion Model
+
+
+Summary (Non-Legal):
+
+You can freely use, modify, and build on SIL.
+You cannot misrepresent your version as the official SIL reference implementation.
+
+
+Legal Status
+
+This license is an open permissive Open Standard license for the SIL reference implementation.
+
+To the maximum extent permitted by applicable law, this license grants rights similar in spirit to permissive open-source licenses, while preserving truthful representation requirements for the SIL name and reference implementation.
+
+If any provision is found unenforceable, the remaining provisions remain in effect.
+
+
+Permission
+
+Permission is hereby granted, free of charge, to any person or organization to:
+
+use
+execute
+study
+reproduce
+publish
+distribute
+modify
+implement
+extend
+
+the SIL reference implementation, in whole or in part, for commercial or non-commercial use, subject only to the representation and naming conditions defined in this license.
+
+No registration, fees, or approval required.
+
+
+No Restrictions on Use
+
+This reference implementation imposes no restrictions on usage, except:
+
+truthful representation
+non-misleading use of the SIL name
+
+Attribution is not required but is appreciated.
+No endorsement or certification is implied.
+No runtime obligations apply.
+
+Correctness is governed by:
+
+position = resolve(structure)
+
+and not by licensing terms.
+
+
+Representation & Naming
+
+Modified or extended implementations:
+
+must not be presented as the canonical SIL reference implementation unless its structural behavior is preserved
+must not imply official authorship, certification, or endorsement
+
+Use of the name “SIL” must not imply:
+
+endorsement
+certification
+governance authority
+official compliance
+
+This license does not grant any rights to trademarks, service marks, or branding associated with SIL or Shunyaya.
+
+
+Recommended Attribution (Optional)
+
+Preferred form:
+
+Implements SIL — Structural Integer Line (Shunyaya Structural Motion Model)
+
+Attribution must not imply endorsement.
+
+
+Scope of the Reference Implementation
+
+This release includes:
+
+structural fragments (base, moves, retractions, confirmations)
+structural position resolution logic
+conflict handling and abstention logic
+demo applications (HTML + Python)
+outputs and reference outputs
+validation traces
+
+SIL defines a deterministic structural motion model where position emerges from structure:
+
+resolve(structure) ->
+
+RESOLVED if structurally consistent final position exists
+INCOMPLETE if required structural elements are missing
+ABSTAIN if structure is conflicting or unsafe
+
+
+What This Demonstrates
+
+• position resolution from fragmented structure
+• independence from execution order
+• independence from timestamps and synchronized clocks
+• safe handling of incomplete structural states
+• conflict containment without corrupting position
+• deterministic convergence across independent nodes
+• reproducible structural outcomes
+• primitive structural motion without time (structure-derived)
+
+
+Conformance
+
+An implementation is considered compatible if it preserves:
+
+structure-based position resolution
+independence from order as authority
+independence from synchronized time
+deterministic convergence
+reproducibility under equivalent inputs
+explicit INCOMPLETE and ABSTAIN handling
+
+Conformance is judged by observable behavior, not internal implementation.
+
+
+Relationship to Shunyaya Framework
+
+SIL is part of the broader Shunyaya Structural Universal Mathematics (SSUM) framework.
+
+It builds on:
+
+SSUM-Time → time reconstruction without clocks
+STOCRS → order-free computation
+SSNT → structural traversal without time
+
+SIL extends these principles into structure-derived motion.
+
+
+Architecture License
+
+The conceptual architecture and documentation are licensed under:
+
+Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
+
+Permitted:
+
+research
+academic use
+study and reproduction
+non-commercial distribution
+
+Commercial use of architecture text is not permitted under this license.
+
+Full license:
+https://creativecommons.org/licenses/by-nc/4.0/
+
+
+Responsibility
+
+Use of SIL in:
+
+distributed systems
+AI state systems
+control systems
+robotics and motion validation
+signal processing
+asynchronous execution systems
+
+is entirely at the user’s own responsibility.
+
+SIL provides:
+
+deterministic structural position resolution
+correctness from structure
+safe handling of incomplete/conflicting structure
+
+It does not provide:
+
+physical motion guarantees
+real-world system safety guarantees
+regulatory compliance
+system-level fault tolerance
+
+
+No Warranty
+
+THE SIL REFERENCE IMPLEMENTATION IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND.
+
+THIS INCLUDES, BUT IS NOT LIMITED TO:
+
+MERCHANTABILITY
+FITNESS FOR A PARTICULAR PURPOSE
+NON-INFRINGEMENT
+
+IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM USE OF THIS IMPLEMENTATION.
+
+
+Closing Statement
+
+SIL explores a fundamental possibility:
+
+Motion can emerge from structure — without reliance on time, order, or synchronization.
+
+It is released openly to encourage:
+
+independent validation
+real-world testing
+safe experimentation
+broader adoption of structure-first motion systems
+
+Where motion is traditionally governed by sequence and time,
+SIL demonstrates that it can also be understood as a process of structural resolution.
+
+SIL is offered as a reference model for that shift.
